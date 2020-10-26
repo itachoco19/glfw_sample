@@ -2,6 +2,26 @@
 #include <iostream>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include "program.h"
+#include <vector>
+
+GLboolean printProgramInfo(GLuint program)
+{
+    GLint status;
+    glGetProgramiv(program, GL_LINK_STATUS, &status);
+    if(status == GL_FALSE) std::cerr << "Link error" << std::endl;
+    GLsizei bufsize;
+    glGetProgramiv(program, GL_INFO_LOG_LENGTH, &bufsize);
+
+    if(bufsize > 1)
+    {
+        std::vector<GLchar> infoLog(bufsize);
+        GLsizei length;
+        glGetProgramInfoLog(program, bufsize, &length, &infoLog[0]);
+        std::cerr << &infoLog[0] << std::endl;
+    }
+    return static_cast<GLboolean>(status);
+}
 
 int main(void)
 {
@@ -30,10 +50,13 @@ int main(void)
         return 1;
     }
     glfwSwapInterval(1);
-    glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
+    glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+    const GLuint program(loadProgram("point.vert", "point.frag"));
     while(glfwWindowShouldClose(window) == GL_FALSE)
     {
         glClear(GL_COLOR_BUFFER_BIT);
+        printProgramInfo(program);
+        glUseProgram(program);
         glfwSwapBuffers(window);
         glfwWaitEvents();
     }
