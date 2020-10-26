@@ -5,6 +5,19 @@
 #include "program.h"
 #include <vector>
 
+struct Vertex
+{
+    GLfloat position[2];
+};
+
+static constexpr Vertex vertex[] = 
+{
+    {-0.5f, -0.5f},
+    {0.5f, -0.5f},
+    {0.5f, 0.5f},
+    {-0.5f, 0.5f}
+};
+
 GLboolean printProgramInfo(GLuint program)
 {
     GLint status;
@@ -41,8 +54,15 @@ int main(void)
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 4);
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+    
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    
     glfwMakeContextCurrent(window);
+
+    GLuint vbo;
+    glGenBuffers(1, &vbo);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    glBufferData(GL_ARRAY_BUFFER, 4 * sizeof(Vertex), vertex, GL_STATIC_DRAW);
     glewExperimental = GL_TRUE;
     if(glewInit() != GLEW_OK)
     {
