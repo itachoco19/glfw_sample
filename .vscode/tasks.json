@@ -1,0 +1,38 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "process",
+			"label": "C/C++: g++ build active file",
+			"command": "/usr/bin/g++",
+			"args": [
+				"-g",
+				"${workspaceFolder}/main.cpp",
+				"-o",
+				"${workspaceFolder}/a.out",
+				"-std=c++11",
+				"-L/usr/local/lib",
+				"-Wl,-rpath=/usr/lib64",
+				"-lGL",
+				"-lGLEW",
+				"-lglfw3",
+				"-lXrandr",
+				"-lXinerama",
+				"-lXcursor",
+				"-lXi",
+				"-lXxf86vm",
+				"-lrt",
+				"-lm",
+				"-ldl",
+				"-pthread",
+			],
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"problemMatcher": [
+				"$gcc"
+			],
+			"group": "build"
+		}
+	]
+}
