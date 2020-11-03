@@ -11,6 +11,11 @@ Object::Object(GLint size, GLsizei vertex_count, const Vertex* vertex)
     glEnableVertexAttribArray(0);
 }
 
+void Object::bind() const
+{
+    glBindVertexArray(this->vao);
+}
+
 Object::~Object()
 {
     glDeleteVertexArrays(1, &(this->vao));

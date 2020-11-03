@@ -1,9 +1,19 @@
 #include <cstdlib>
 #include <iostream>
+#include <vector>
+#include <memory>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include "program.h"
-#include <vector>
+#include "Shape.h"
+
+constexpr Object::Vertex rectangleVertex[] = 
+{
+    {-0.5f, -0.5f},
+    {0.5f, -0.5f},
+    {0.5f, 0.5f},
+    {-0.5f, 0.5f}
+};
 
 GLboolean printProgramInfo(GLuint program)
 {
@@ -39,7 +49,7 @@ int main(void)
     }
     atexit(glfwTerminate);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
     
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -55,11 +65,12 @@ int main(void)
     glfwSwapInterval(1);
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
     const GLuint program(loadProgram("point.vert", "point.frag"));
+    std::unique_ptr<const Shape> shape(new Shape(2, 4, rectangleVertex));
     while(glfwWindowShouldClose(window) == GL_FALSE)
     {
         glClear(GL_COLOR_BUFFER_BIT);
-        printProgramInfo(program);
         glUseProgram(program);
+        shape->draw();
         glfwSwapBuffers(window);
         glfwWaitEvents();
     }
