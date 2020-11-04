@@ -28,7 +28,7 @@
 				"-lrt",
 				"-lm",
 				"-ldl",
-				"-pthread",
+				"-pthread"
 			],
 			"options": {
 				"cwd": "${workspaceFolder}"
