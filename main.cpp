@@ -6,6 +6,7 @@
 #include <GLFW/glfw3.h>
 #include "program.h"
 #include "Shape.h"
+#include "window.h"
 
 constexpr Object::Vertex rectangleVertex[] = 
 {
@@ -41,20 +42,21 @@ int main(void)
         return 1;
     }
 
+    /*
     GLFWwindow* const window(glfwCreateWindow(640, 480, "Hello!", NULL, NULL));
     if(window == NULL)
     {
         std::cerr << "Can't create window" << std::endl;
         return 1;
     }
+    */
+    Window window;
     atexit(glfwTerminate);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
     
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    
-    glfwMakeContextCurrent(window);
 
     glewExperimental = GL_TRUE;
     if(glewInit() != GLEW_OK)
@@ -63,15 +65,17 @@ int main(void)
         return 1;
     }
     glfwSwapInterval(1);
-    glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+    glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
     const GLuint program(loadProgram("point.vert", "point.frag"));
+    const GLint aspectLoc(glGetUniformLocation(program, "aspect"));
     std::unique_ptr<const Shape> shape(new Shape(2, 4, rectangleVertex));
-    while(glfwWindowShouldClose(window) == GL_FALSE)
+    while(window)
     {
         glClear(GL_COLOR_BUFFER_BIT);
         glUseProgram(program);
+        glUniform1f(aspectLoc, window.getAspect());
         shape->draw();
-        glfwSwapBuffers(window);
+        window.swapBuffer();
         glfwWaitEvents();
     }
     return 0;

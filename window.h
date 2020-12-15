@@ -7,6 +7,7 @@
 class Window
 {
     GLFWwindow* const window;
+    GLfloat aspect;
 public:
     Window(int width = 640, int height = 480, const char* title = "Hello!") : window(glfwCreateWindow(width, height, title, NULL, NULL))
     {
@@ -23,6 +24,9 @@ public:
             exit(1);
         }
         glfwSwapInterval(1);
+        glfwSetWindowUserPointer(window, this);
+        glfwSetWindowSizeCallback(window, resize);
+        resize(window, width, height);
     }
     virtual ~Window()
     {
@@ -37,6 +41,18 @@ public:
     {
         glfwSwapBuffers(this->window);
     }
+    static void resize(GLFWwindow* const window, int width, int height)
+    {
+        int fbWidth, fbHeight;
+        glfwGetFramebufferSize(window, &fbWidth, &fbHeight);
+        glViewport(0, 0, fbWidth, fbHeight);
+        Window* const instance(static_cast<Window*>(glfwGetWindowUserPointer(window)));
+        if(instance != NULL)
+        {
+            instance->aspect = static_cast<GLfloat>(width) / static_cast<GLfloat>(height);
+        }
+    }
+    GLfloat getAspect() const {return this->aspect;}
 };
 
 #endif
